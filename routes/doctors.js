@@ -34,7 +34,7 @@ router.post('/registerDoc', async (req, res) => {
 
 router.post('/loginDoc', async (req, res) => {
     const {email, password} = req.body;
-    const sql = `SELECT doc_email, doc_password, doc_id, doc_name FROM doctors WHERE doc_email = '${email}'`;
+    const sql = `SELECT doc_email, doc_password, doc_name FROM doctors WHERE doc_email = '${email}'`;
     connection.query(sql, async function (err, result) {
         if (err) throw err;
         if(result.length === 0) {
@@ -44,8 +44,9 @@ router.post('/loginDoc', async (req, res) => {
         }
         //const correctPassword = await bcrypt.compare(password, result[0].doc_password);
         if (password === result[0].doc_password) {
-            return res.status(401).json({
-                'alert': 'Sesion_Start'
+            res.json({
+                'alert': 'SESSION_START()',
+                data: result
             })
         } else{
             return res.status(401).json({
