@@ -4,7 +4,8 @@
   "description": "Proyecto Lenguajes Modernos de Programacion",
   "main": "index.js",
   "scripts": {
-    "test": "npm run dev"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
   },
   "author": "Alejandro Garcia Garcia, Yair Israel Sanabria Porras, Jesus Eduardo Pacheco Martinez, Fernando Castillo Rogriguez",
   "license": "ISC",
