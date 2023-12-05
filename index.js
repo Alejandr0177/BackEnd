@@ -16,6 +16,9 @@ app.use(bodyParser.json());
 const route_doctors = require('./routes/doctors')
 app.use('/', route_doctors)
 
+const route_patients = require('./routes/patients')
+app.use('/', route_patients)
+
 app.listen(PORT, () => {
     console.log(`Escuchando Puerto: ${PORT}`)
 })
