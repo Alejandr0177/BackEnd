@@ -19,9 +19,9 @@ router.post('/registerDoc', async (req, res) => {
     const body = req.body;
     const {name, app, apm, email, password, phone} = req.body;
     const sql = "INSERT INTO doctors(doc_name, doc_app, doc_apm, doc_email, doc_password, doc_phone) VALUES (?) ";
-    const salt = await bcrypt.genSalt(10);
-    const newPassword = await bcrypt.hash(password, salt)
-    const values = [name, app, apm, email, newPassword, phone];
+    //const salt = await bcrypt.genSalt(10);
+    //const newPassword = await bcrypt.hash(password, salt)
+    const values = [name, app, apm, email, password, phone];
     connection.query(sql, [values], function (err, result) {
         if (err) throw err;
         console.log("New registered user");
@@ -42,33 +42,35 @@ router.post('/loginDoc', async (req, res) => {
                 error: 'Email not Found'
             })
         }
-        const correctPassword = await bcrypt.compare(password, result[0].doc_password);
-        console.log(correctPassword)
-        console.log(result[0].doc_password)
-        if(!correctPassword){
+        //const correctPassword = await bcrypt.compare(password, result[0].doc_password);
+        if (password === result[0].doc_password) {
+            return res.status(401).json({
+                'alert': 'Sesion_Start'
+            })
+        } else{
             return res.status(401).json({
                 error: 'Incorrect password'
             })
         }
-        //Agregar JWT
-        const accessToken = jwt.sign({
-            username: result[0].doc_name,
-            id: result[0].doc_id,
-        }, process.env.ACCESS_TOKEN_SECRET, {
-            expiresIn: '30m'
-        })
-        const refreshToken = jwt.sign({
-            username: result[0].doc_name,
-            id: result[0].doc_id,
-        }, process.env.REFRESH_TOKEN_SECRET, {
-            expiresIn: '1d'
-        })
-        res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
-        res.header('auth-token', accessToken).json ({
-            error: null,
-            role: process.env.DRIVER,
-            accessToken: accessToken
-        })
+        // //Agregar JWT
+        // const accessToken = jwt.sign({
+        //     username: result[0].doc_name,
+        //     id: result[0].doc_id,
+        // }, process.env.ACCESS_TOKEN_SECRET, {
+        //     expiresIn: '30m'
+        // })
+        // const refreshToken = jwt.sign({
+        //     username: result[0].doc_name,
+        //     id: result[0].doc_id,
+        // }, process.env.REFRESH_TOKEN_SECRET, {
+        //     expiresIn: '1d'
+        // })
+        // res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
+        // res.header('auth-token', accessToken).json ({
+        //     error: null,
+        //     role: process.env.DRIVER,
+        //     accessToken: accessToken
+        // })
     });
 })
 
