@@ -33,46 +33,31 @@ router.post('/registerDoc', async (req, res) => {
 })
 
 router.post('/loginDoc', async (req, res) => {
-    const {email, password} = req.body;
+    const { email, password } = req.body;
     const sql = `SELECT doc_id, doc_email, doc_password, doc_name FROM doctors WHERE doc_email = '${email}'`;
     connection.query(sql, async function (err, result) {
         if (err) throw err;
-        if(result.length === 0) {
+        if (result.length === 0) {
             return res.status(401).json({
                 error: 'Email not Found'
-            })
+            });
         }
-        //const correctPassword = await bcrypt.compare(password, result[0].doc_password);
+
         if (password === result[0].doc_password) {
+            // Almacenar id_doc en la sesión
+            req.session.id_doc = result[0].doc_id;
+
             res.json({
                 'alert': 'SESSION_START()',
                 data: result
-            })
-        } else{
+            });
+        } else {
             return res.status(401).json({
                 error: 'Incorrect password'
-            })
+            });
         }
-        // //Agregar JWT
-        // const accessToken = jwt.sign({
-        //     username: result[0].doc_name,
-        //     id: result[0].doc_id,
-        // }, process.env.ACCESS_TOKEN_SECRET, {
-        //     expiresIn: '30m'
-        // })
-        // const refreshToken = jwt.sign({
-        //     username: result[0].doc_name,
-        //     id: result[0].doc_id,
-        // }, process.env.REFRESH_TOKEN_SECRET, {
-        //     expiresIn: '1d'
-        // })
-        // res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
-        // res.header('auth-token', accessToken).json ({
-        //     error: null,
-        //     role: process.env.DRIVER,
-        //     accessToken: accessToken
-        // })
     });
-})
+});
+
 
 module.exports = router;
