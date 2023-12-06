@@ -36,7 +36,7 @@ router.post('/updatePat/:id', async (req, res) => {
     const sql = `
         UPDATE patients 
         SET pat_name = ?, pat_lastname = ?, pat_email = ?, pat_phone = ?, pat_birth = ?, pat_gender = ?, pat_treatment = ?, pat_bloodgroup = ?
-        WHERE id_pat= ?`; // Se asume que 'pat_id' es el campo que representa el ID del paciente en la base de datos
+        WHERE id_pat= ?`; 
 
     const values = [name, lastname, email, phone, birth, gender, treatment, bloodgroup, id];
 
@@ -53,6 +53,37 @@ router.post('/updatePat/:id', async (req, res) => {
                 error: null,
                 data: result
             });
+        }
+    });
+});
+
+// Ruta para eliminar un paciente por su ID
+router.delete('/deletePat/:id', async (req, res) => {
+    const { id } = req.params; 
+
+    const sql = `DELETE FROM patients WHERE id_pat = ?`; 
+
+    connection.query(sql, id, function (err, result) {
+        if (err) {
+            console.error("Error al eliminar paciente:", err);
+            res.status(500).json({
+                error: 'Error al eliminar paciente',
+                data: null
+            });
+        } else {
+            if (result.affectedRows > 0) {
+                console.log("Paciente eliminado exitosamente");
+                res.json({
+                    error: null,
+                    message: 'Paciente eliminado exitosamente'
+                });
+            } else {
+                console.log("No se encontró el paciente para eliminar");
+                res.status(404).json({
+                    error: 'Paciente no encontrado',
+                    data: null
+                });
+            }
         }
     });
 });
