@@ -84,10 +84,10 @@ router.put('/updatePat', async (req, res) => {
 });
 
 // Ruta para eliminar un paciente por su ID
-router.delete('/deletePat', async (req, res) => {
-    const pat_id = req.body.pat_id;
+router.delete('/deletePat/:pat_id', async (req, res) => {
+    const {pat_id} = req.params;
     const sql = `DELETE FROM patients WHERE pat_id = ?`; 
-    connection.query(sql, [pat_id], function (err, result) {
+    connection.query(sql, pat_id, function (err, result) {
         if (err) throw err;
         console.log(err);
         res.json({

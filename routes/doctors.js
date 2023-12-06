@@ -34,7 +34,7 @@ router.post('/registerDoc', async (req, res) => {
 
 router.post('/loginDoc', async (req, res) => {
     const {email, password} = req.body;
-    const sql = `SELECT doc_email, doc_password, doc_name FROM doctors WHERE doc_email = '${email}'`;
+    const sql = `SELECT doc_id, doc_email, doc_password, doc_name FROM doctors WHERE doc_email = '${email}'`;
     connection.query(sql, async function (err, result) {
         if (err) throw err;
         if(result.length === 0) {
