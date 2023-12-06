@@ -15,10 +15,9 @@ router.get('/showPats', async (req, res) => {
 })
 
 router.post('/registerPat', async (req, res) => {
-    const body = req.body;
-    const {name, lastname, email, phone, birth, gender, treatment, bloodgroup} = req.body;
-    const sql = "INSERT INTO patients(pat_name, pat_lastname , pat_email, pat_phone, pat_birth, pat_gender, pat_treatment, pat_bloodgroup) VALUES (?) ";
-    const values = [name, lastname, email, phone, birth, gender, treatment, bloodgroup];
+    const {name, lastname, email, phone, birth, gender, treatment, bloodgroup, doc_id} = req.body;
+    const sql = "INSERT INTO patients(pat_name, pat_lastname , pat_email, pat_phone, pat_birth, pat_gender, pat_treatment, pat_bloodgroup, pat_doc_id) VALUES (?) ";
+    const values = [name, lastname, email, phone, birth, gender, treatment, bloodgroup, doc_id];
     connection.query(sql, [values], function (err, result) {
         if (err) throw err;
         console.log("New registered patient");
@@ -29,19 +28,44 @@ router.post('/registerPat', async (req, res) => {
     });
 })
 
-router.post('/updatePat/:id', async (req, res) => {
-    const { id } = req.params; // Obtener el ID del paciente de los parámetros de la URL
-    const { name, lastname, email, phone, birth, gender, treatment, bloodgroup } = req.body;
-
-    console.log(id)
-
-    const sql = `
+router.put('/updatePat', async (req, res) => {
+    //const { id } = req.params; // Obtener el ID del paciente de los parámetros de la URL
+    const { pat_id, name, lastname, email, phone, birth, gender, treatment, bloodgroup, doc_id} = req.body;
+    const e_sql = `SELECT * FROM patients WHERE pat_email = '${email}'`
+        connection.query(e_sql, async function (err, result){
+            if (err) throw err;
+            if (result.length != 0){
+                return res.status(401).json({
+                    error: `The "email: ${email}" you entered already exists`
+                })
+            }
+            const p_sql = `SELECT * FROM patients WHERE pat_phone = '${phone}'`
+            connection.query(p_sql, async function (err, result){
+                if (err) throw err;
+                if (result.length != 0){
+                    return res.status(401).json({
+                        error: `The "phone: ${phone}" you entered already exists`
+                    })
+                }
+                const sql = 
+                        `UPDATE patients ` +
+                        `SET pat_name = '${name}', pat_lastname = '${lastname}', pat_email = '${email}', pat_phone = '${phone}', pat_birth = '${birth}', pat_gender = '${gender}', pat_treatment = '${treatment}', pat_bloodgroup = '${bloodgroup}', pat_doc_id = '${doc_id}' `+
+                        `WHERE pat_id= '${pat_id}';`;
+                connection.query(sql, function (err, result){
+                    if (err) throw err;
+                    console.log("Update Patient");
+                    res.json({
+                        error: null,
+                        data: result
+                    })
+                })
+            })
+        })
+    /*const sql = `
         UPDATE patients 
-        SET pat_name = ?, pat_lastname = ?, pat_email = ?, pat_phone = ?, pat_birth = ?, pat_gender = ?, pat_treatment = ?, pat_bloodgroup = ?
-        WHERE id_pat= ?`; 
-
+        SET pat_name = ?, pat_lastname = ?, pat_email = ?, pat_phone = ?, pat_birth = ?, pat_gender = ?, pat_treatment = ?, pat_bloodgroup = ?, pat_doc_id = ?
+        WHERE pat_id= ?`;
     const values = [name, lastname, email, phone, birth, gender, treatment, bloodgroup, id];
-
     connection.query(sql, values , function (err, result) {
         if (err) {
             console.error("Error al actualizar paciente:", err);
@@ -56,37 +80,41 @@ router.post('/updatePat/:id', async (req, res) => {
                 data: result
             });
         }
-    });
+    });*/
 });
 
 // Ruta para eliminar un paciente por su ID
-router.delete('/deletePat/:id', async (req, res) => {
-    const { id } = req.params;
-
-    const sql = `DELETE FROM patients WHERE id_pat = ?`; 
-
-    connection.query(sql, id, function (err, result) {
-        if (err) {
-            console.error("Error al eliminar paciente:", err);
-            res.status(500).json({
-                error: 'Error al eliminar paciente',
-                data: null
-            });
-        } else {
-            if (result.affectedRows > 0) {
-                console.log("Paciente eliminado exitosamente");
-                res.json({
-                    error: null,
-                    message: 'Paciente eliminado exitosamente'
-                });
-            } else {
-                console.log("No se encontró el paciente para eliminar");
-                res.status(404).json({
-                    error: 'Paciente no encontrado',
-                    data: null
-                });
-            }
-        }
+router.delete('/deletePat', async (req, res) => {
+    const pat_id = req.body.pat_id;
+    const sql = `DELETE FROM patients WHERE pat_id = ?`; 
+    connection.query(sql, [pat_id], function (err, result) {
+        if (err) throw err;
+        console.log(err);
+        res.json({
+            error: null,
+            data: result
+        })
+        // if (err) {
+        //     console.error("Error al eliminar paciente:", err);
+        //     res.status(500).json({
+        //         error: 'Error al eliminar paciente',
+        //         data: null
+        //     });
+        // } else {
+        //     if (result.affectedRows > 0) {
+        //         console.log("Paciente eliminado exitosamente");
+        //         res.json({
+        //             error: null,
+        //             message: 'Paciente eliminado exitosamente'
+        //         });
+        //     } else {
+        //         console.log("No se encontró el paciente para eliminar");
+        //         res.status(404).json({
+        //             error: 'Paciente no encontrado',
+        //             data: null
+        //         });
+        //     }
+        // }
     });
 });
 
