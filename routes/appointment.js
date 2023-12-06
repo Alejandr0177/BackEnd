@@ -24,29 +24,3 @@ router.get('/showAppointments', async (req, res) => {
     });
 });
 
-router.post('/registerAppointment', async (req, res) => {
-    const body = req.body;
-    const { date, hour, id_doc, id_pat } = req.body;
-    const sql =  " INSERT INTO appointment (app_date, app_hour, app_id_doc, app_id_pat) VALUES (?) ";
-    const values = [date, hour, id_doc, id_pat];
-    console.log(values);   
-
-    connection.query(sql, [values], function (err, result) {
-        if (err)  {
-            console.error("Error al crear la cita:", err);
-            res.status(500).json({
-                error: 'Error al crear la cita',
-                data: null
-            });
-        } else {
-            res.json({
-                error: null,
-                message: 'Cita creada exitosamente'
-            });
-        }
-    });
-});
-
-
-
-module.exports = router;
