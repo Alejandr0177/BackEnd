@@ -33,6 +33,8 @@ router.post('/updatePat/:id', async (req, res) => {
     const { id } = req.params; // Obtener el ID del paciente de los parámetros de la URL
     const { name, lastname, email, phone, birth, gender, treatment, bloodgroup } = req.body;
 
+    console.log(id)
+
     const sql = `
         UPDATE patients 
         SET pat_name = ?, pat_lastname = ?, pat_email = ?, pat_phone = ?, pat_birth = ?, pat_gender = ?, pat_treatment = ?, pat_bloodgroup = ?
@@ -40,7 +42,7 @@ router.post('/updatePat/:id', async (req, res) => {
 
     const values = [name, lastname, email, phone, birth, gender, treatment, bloodgroup, id];
 
-    connection.query(sql, values, function (err, result) {
+    connection.query(sql, values , function (err, result) {
         if (err) {
             console.error("Error al actualizar paciente:", err);
             res.status(500).json({
@@ -59,7 +61,7 @@ router.post('/updatePat/:id', async (req, res) => {
 
 // Ruta para eliminar un paciente por su ID
 router.delete('/deletePat/:id', async (req, res) => {
-    const { id } = req.params; 
+    const { id } = req.params;
 
     const sql = `DELETE FROM patients WHERE id_pat = ?`; 
 
@@ -87,5 +89,6 @@ router.delete('/deletePat/:id', async (req, res) => {
         }
     });
 });
+
 
 module.exports = router;

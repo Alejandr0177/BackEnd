@@ -24,4 +24,3 @@ router.get('/showAppointments', async (req, res) => {
     });
 });
 
-module.exports = router;
