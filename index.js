@@ -19,6 +19,9 @@ app.use('/', route_doctors)
 const route_patients = require('./routes/patients')
 app.use('/', route_patients)
 
+const route_appointment = require('./routes/appointment')
+app.use('/', route_appointment)
+
 app.listen(PORT, () => {
     console.log(`Escuchando Puerto: ${PORT}`)
 })

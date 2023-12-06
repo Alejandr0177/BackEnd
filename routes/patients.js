@@ -40,7 +40,7 @@ router.post('/updatePat/:id', async (req, res) => {
 
     const values = [name, lastname, email, phone, birth, gender, treatment, bloodgroup, id];
 
-    connection.query(sql, values, function (err, result) {
+    connection.query(sql, values , function (err, result) {
         if (err) {
             console.error("Error al actualizar paciente:", err);
             res.status(500).json({
