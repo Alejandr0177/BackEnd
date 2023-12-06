@@ -46,4 +46,27 @@ router.post('/registerAppointment', async (req, res) => {
     });
 });
 
+// router.put('/updateAppointment/:id', async (req, res) => {
+//     const { id } = req.params;
+//     const { app_date, app_hour, app_id_doc, app_id_pat } = req.body;
+
+//     const sql = " UPDATE appointment SET app_date = ?, app_hour = ?, app_id_doc = ?, app_id_pat = ? WHERE id_app = ? ";
+//     const values = [app_date, app_hour, app_id_doc, app_id_pat, id];
+
+//     connection.query(sql, values, function (err, result) {
+//         if (err) {
+//             console.error("Error al actualizar la cita:", err);
+//             res.status(500).json({
+//                 error: 'Error al actualizar la cita',
+//                 data: null
+//             });
+//         } else {
+//             res.json({
+//                 error: null,
+//                 message: 'Cita actualizada exitosamente'
+//             });
+//         }
+//     });
+// });
+
 module.exports = router;
