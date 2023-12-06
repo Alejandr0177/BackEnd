@@ -69,4 +69,35 @@ router.post('/registerAppointment', async (req, res) => {
 //     });
 // });
 
+
+// router.delete('/deleteAppointment/:id', async (req, res) => {
+//     const { id } = req.params;
+
+//     const sql = " DELETE FROM appointment WHERE id_app = ?";
+//     const values = [id];
+
+//     connection.query(sql, values, function (err, result) {
+//         if (err) {
+//             console.error("Error al eliminar la cita:", err);
+//             res.status(500).json({
+//                 error: 'Error al eliminar la cita',
+//                 data: null
+//             });
+//         } else {
+//             if (result.affectedRows > 0) {
+//                 res.json({
+//                     error: null,
+//                     message: 'Cita eliminada exitosamente'
+//                 });
+//             } else {
+//                 res.status(404).json({
+//                     error: 'No se encontró la cita',
+//                     data: null
+//                 });
+//             }
+//         }
+//     });
+// });
+
+
 module.exports = router;
