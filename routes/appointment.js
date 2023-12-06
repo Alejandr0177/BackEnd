@@ -81,4 +81,28 @@ router.delete('/deleteappointment/:id', (req, res) => {
     });
 });
 
+// Consulta para el calendario.
+router.get('/cons2Appointments', (req, res) => {
+    const sql = `
+        SELECT p.pat_name AS pat_nombre, p.pat_lastname, a.app_date, a.app_hour, a.app_doc_id
+        FROM appointment AS a
+        INNER JOIN patients AS p ON a.app_pat_id = p.pat_id
+    `;
+
+    connection.query(sql, (err, result) => {
+        if (err) {
+            console.error("Error al obtener citas específicas:", err);
+            res.status(500).json({
+                error: 'Error al obtener citas específicas',
+                data: null
+            });
+        } else {
+            res.json({
+                error: null,
+                data: result
+            });
+        }
+    });
+});
+
 module.exports = router;
