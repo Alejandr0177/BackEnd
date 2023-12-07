@@ -31,12 +31,6 @@ pat_doc_id INT NOT NULL,
 PRIMARY KEY (pat_id),
 UNIQUE (pat_email),
 UNIQUE (pat_phone),
-
-CONSTRAINT fk_doctor_patient
-		FOREIGN KEY (pat_doc_id)
-        REFERENCES doctors (doc_id)
-        ON DELETE RESTRICT
-        ON UPDATE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS appointment(
