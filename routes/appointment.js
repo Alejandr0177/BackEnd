@@ -8,20 +8,14 @@ router.get('/showAppointments', (req, res) => {
         FROM appointment AS a
         INNER JOIN patients AS p ON a.app_pat_id = p.pat_id
     `;
-
-    connection.query(sql, (err, result) => {
-        if (err) {
-            console.error("Error al obtener citas:", err);
-            res.status(500).json({
-                error: 'Error al obtener citas',
-                data: null
-            });
-        } else {
-            res.json({
-                error: null,
-                data: result
-            });
-        }
+    connection.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log(result);
+        res.json({
+            error: null,
+            'alert': "success",
+            data: result
+        });
     });
 });
 
