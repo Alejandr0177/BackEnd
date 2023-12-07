@@ -19,6 +19,7 @@ router.get('/showAppointments', (req, res) => {
         } else {
             res.json({
                 error: null,
+                message: 'success',
                 data: result
             });
         }

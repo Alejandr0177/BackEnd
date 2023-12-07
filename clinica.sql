@@ -26,11 +26,10 @@ pat_birth DATE,
 pat_gender ENUM('Male','Female','Other'),
 pat_treatment VARCHAR (50),
 pat_bloodgroup ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'),
-pat_doc_id INT NOT NULL,
 
 PRIMARY KEY (pat_id),
 UNIQUE (pat_email),
-UNIQUE (pat_phone),
+UNIQUE (pat_phone)
 );
 
 CREATE TABLE IF NOT EXISTS appointment(
