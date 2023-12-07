@@ -3,11 +3,7 @@ const connection = require('../config/conexion');
 
 // Obtener todas las citas
 router.get('/showAppointments', (req, res) => {
-    const sql = `
-        SELECT p.pat_name AS pat_nombre, p.pat_email, p.pat_phone, a.app_date, a.app_hour AS app_time
-        FROM appointment AS a
-        INNER JOIN patients AS p ON a.app_pat_id = p.pat_id
-    `;
+    const sql = "SELECT * FROM appointments";
 
     connection.query(sql, (err, result) => {
         if (err) {
@@ -28,24 +24,18 @@ router.get('/showAppointments', (req, res) => {
 
 // Crear una nueva cita
 router.post('/registerAppointment', (req, res) => {
-    const { date, hour, doc_id, pat_id } = req.body;
+    const { name, email, phone, date, hour} = req.body;
 
-    const sql = "INSERT INTO appointment (app_date, app_hour, app_doc_id, app_pat_id) VALUES (?,?,?,?) ";
-    const values = [date, hour, doc_id, pat_id];
-
-    connection.query(sql, values, (err, result) => {
-        if (err) {
-            console.error("Error al crear la cita:", err);
-            res.status(500).json({
-                error: 'Error al crear la cita',
-                data: null
-            });
-        } else {
-            res.json({
-                error: null,
-                message: 'Cita creada exitosamente'
-            });
-        }
+    const sql = "INSERT INTO appointment(app_name, app_email, app_phone, app_date, app_hour) VALUES (?) ";
+    
+    const values = [name, email, phone, date, hour];
+    connection.query(sql, [values], (err, result) => {
+        if (err) throw err;
+        console.log('new appointment');
+        res.json({
+            error: null,
+            data: result
+        })
     });
 });
 
